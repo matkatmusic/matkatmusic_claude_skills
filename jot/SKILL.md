@@ -16,10 +16,9 @@ Capture an idea instantly without breaking flow. No questions, no confirmation, 
 
 1. Extract the raw jot text from the arguments.
 2. Collect the last 5 user/assistant message pairs from the current conversation. Copy them verbatim — no summarization.
-3. Spawn a background agent with the jot text, the 5 message pairs, and the current working directory. Tell the background agent to read these files for its instructions:
-   - `jot/background.md` — full background workflow
-   - `jot/template.md` — file template for new TODOs
-   - `jot/rules.md` — constraints
-   All paths relative to the directory containing this SKILL.md.
+3. Spawn a background agent with the jot text, the 5 message pairs, and the current working directory. Tell the background agent to read these files for its instructions (use the "Base directory for this skill" path from your system context to build absolute paths):
+   - `./background.md` — full background workflow
+   - `./template.md` — file template for new TODOs
+   - `./rules.md` — constraints
 4. Continue the conversation immediately. Do not wait.
 5. When the background agent completes, display: `jotted <filename>`
