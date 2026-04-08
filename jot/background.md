@@ -1,12 +1,15 @@
 # Background Agent Workflow
 
-## 1. Gather git state
+## 1. Use pre-gathered state
 
-Run in parallel:
-- `git branch --show-current`
-- `git log --oneline -5`
-- `git status --short`
-- Check for active plan files in `.claude/plans/`
+The SKILL.md preprocesses shell scripts via `!` backtick syntax before you receive the prompt. By the time you see the "Pre-gathered State" section, the commands have already run and been replaced with their output:
+- **Branch** → current git branch
+- **Commits** → space-separated short hashes
+- **Uncommitted** → filenames with uncommitted changes, or "None"
+- **Plan** → extract from your conversation context (the system reminder names the active plan file path, if any). Use "None" if no plan is active.
+- **Open TODOs** → file paths of open TODOs (one per line, may be empty)
+
+These values are already resolved. Use them directly when filling the template.
 
 ## 2. Check for explicit ID reference
 
@@ -14,7 +17,7 @@ If jot text matches `add to {NNN}` (e.g., "add to 005 — also handle timeout"),
 
 ## 3. Scan for existing related TODOs
 
-1. Read all `status: open` TODO files in `./Todos/`.
+1. The main agent included a list of open TODO file paths in your prompt (one per line, may be empty). Read only those files.
 2. Compare jot text and message pairs against each TODO's title, Idea, and Context sections.
 3. Decide:
    - **Strong match**: Proceed to step 4 (append mode).
@@ -32,5 +35,5 @@ If jot text matches `add to {NNN}` (e.g., "add to 005 — also handle timeout"),
 ## 5. Create new TODO file
 
 1. **Next ID**: Scan `.md` files in `Todos/` and `Todos/done/` for highest numeric ID prefix. Increment by 1. Zero-pad to 3 digits.
-2. **Filename**: Kebab-case the jot text, truncate to first 5-6 words. Format: `{id}_{slug}.md`.
-3. **Write** using the template in `template.md`.
+2. **Filename**: `{id}_{slug}.md` where `{slug}` is the jot text kebab-cased and truncated to 5-6 words.
+3. **Write** using the template in `./template.md`.
